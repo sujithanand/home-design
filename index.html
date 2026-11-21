@@ -19,7 +19,7 @@ html, body { height: 100%; margin: 0; overflow: hidden; background: #cfe3f2; fon
 #view { position: absolute; inset: 0; touch-action: none; }
 canvas { display: block; }
 .bar {
-  position: absolute; right: 12px; top: calc(12px + env(safe-area-inset-top, 0px)); width: 212px; max-height: calc(100% - 190px); overflow-y: auto;
+  position: absolute; right: 12px; top: calc(56px + env(safe-area-inset-top, 0px)); width: 212px; max-height: calc(100% - 234px); overflow-y: auto;
   display: flex; flex-direction: column; gap: 10px; padding: 10px; box-sizing: border-box;
   background: var(--ui); color: var(--ui-text); border: 1px solid var(--ui-line); border-radius: 12px; backdrop-filter: blur(8px);
 }
@@ -49,11 +49,16 @@ button:focus-visible, select:focus-visible { outline: 2px solid var(--accent); o
 #pad .u { grid-column: 2; } 
 #pad .l { grid-row: 2; grid-column: 1; } #pad .d { grid-row: 2; grid-column: 2; } #pad .r { grid-row: 2; grid-column: 3; }
 .toast { position: absolute; left: 50%; top: calc(64px + env(safe-area-inset-top, 0px)); transform: translateX(-50%); background: var(--ui); color: var(--ui-text); border: 1px solid var(--ui-line); border-radius: 8px; padding: 8px 14px; opacity: 0; transition: opacity .25s; pointer-events: none; backdrop-filter: blur(6px); white-space: nowrap; }
+#panelToggle { position: absolute; right: 12px; top: calc(12px + env(safe-area-inset-top, 0px)); z-index: 2; display: flex; align-items: center; gap: 6px; padding: 7px 12px; font-size: 13px; font-weight: 600; }
+#panelToggle svg { width: 16px; height: 16px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; transition: transform .2s; }
+body.panel-hidden .bar { display: none; }
+body.panel-hidden #panelToggle svg { transform: rotate(180deg); }
 </style>
 </head>
 <body>
 <div id="view"></div>
-<div class="bar" role="toolbar" aria-label="Controls">
+<button id="panelToggle" aria-expanded="true" aria-controls="panel" title="Hide settings panel" aria-label="Hide settings panel"><svg viewBox="0 0 24 24"><path d="M6 15l6-6 6 6"/></svg><span>Settings</span></button>
+<div class="bar" id="panel" role="toolbar" aria-label="Controls">
   <div class="grp">
     <h3>View</h3>
     <div class="row icons">
@@ -1276,6 +1281,17 @@ const nbMats = [];
   roof.scale.z = (d + 0.8) / (w + 0.8);
   roof.position.set(x + w / 2, h - 1 + 1.2, z + d / 2);
   [body, roof].forEach(m => { m.castShadow = m.receiveShadow = true; scene.add(m); });
+})();
+
+// settings panel open / close
+(function () {
+  const t = document.getElementById("panelToggle");
+  t.onclick = () => {
+    const hide = !document.body.classList.contains("panel-hidden");
+    document.body.classList.toggle("panel-hidden", hide);
+    const l = hide ? "Show settings panel" : "Hide settings panel";
+    t.setAttribute("aria-expanded", String(!hide)); t.title = l; t.setAttribute("aria-label", l);
+  };
 })();
 
 // default to the primary layouts (UI Layout 1)

@@ -142,6 +142,8 @@ const host = document.getElementById("view");
 const renderer = new THREE.WebGLRenderer({ antialias: true });
 renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
 renderer.outputEncoding = THREE.sRGBEncoding;
+renderer.toneMapping = THREE.ACESFilmicToneMapping;   // compresses highlights so pale walls don't blow out
+renderer.toneMappingExposure = 0.85;
 renderer.shadowMap.enabled = true;
 renderer.shadowMap.type = THREE.PCFSoftShadowMap;
 host.appendChild(renderer.domElement);
@@ -246,7 +248,7 @@ box(266, 35, 43, 51, 0, 0.03, M(0xb9b6b8, 0.5, 0.5));
 box(316, 614, 109, 51, 0, 0.03, M(0xb9b6b8, 0.5, 0.5));
 
 // ---------------------------------------------------------------- walls
-const PAINT = M(0xf1ede4, 0.92), WHITE = M(0xffffff, 0.5), FRAME = M(0xd9dbdd, 0.35, 0.6);
+const PAINT = M(0xddd0ba, 0.92), WHITE = M(0xffffff, 0.5), FRAME = M(0xd9dbdd, 0.35, 0.6);
 const walls = [
   [38,26,52,9],[192,26,74,9],[310,26,64,9],[408,26,138,9],
   [38,26,9,217],[38,302,9,312],
@@ -316,7 +318,7 @@ solid(266, 26, 44, 9);
 }
 
 // ---------------------------------------------------------------- doors (lintel + leaf as drawn open on the plan)
-const DOOR = M(0xb88a5e, 0.5);
+const DOOR = M(0xb08158, 0.5);
 [
   [[38,243,9,59],[40,243.5,57,3]],
   [[219,407,50,9],[265.5,416,3,50]],
@@ -332,11 +334,11 @@ const DOOR = M(0xb88a5e, 0.5);
 
 // ---------------------------------------------------------------- furniture
 const C = {
-  sofa: M(0x7b6f69, 0.95), cush: M(0x8c807a, 0.95), walnut: M(0x4b3122, 0.45), oak: M(0xb5855a, 0.45),
-  oakl: M(0xd2ad7d, 0.45), duvet: M(0xc9c4bf, 0.95), gold: M(0xe3b84c, 0.95), grey: M(0x7d7d7d, 0.95),
-  bed: M(0xd7d2cc, 0.95), pillow: M(0xf3f1ee, 0.95), cer: M(0xf6f6f4, 0.15), steel: M(0xb9bcc0, 0.28, 1),
-  black: M(0x0e0e10, 0.1), granite: M(0x25262a, 0.25), cab: M(0xe8e6e1, 0.4), rugw: M(0xf1eee8, 1.0),
-  green: M(0x2f4a14, 0.95), mirror: M(0xdfe6ea, 0.03, 1), louver: M(0xb9b6b8, 0.45, 0.5), plastic: M(0xececea, 0.4),
+  sofa: M(0x9c6232, 0.95), cush: M(0xb08158, 0.95), walnut: M(0x6a4528, 0.45), oak: M(0xb9824a, 0.45),
+  oakl: M(0xdcb989, 0.45), duvet: M(0xa66b3a, 0.95), gold: M(0xc9a06a, 0.95), grey: M(0xa08f7a, 0.95),
+  bed: M(0xe3c298, 0.95), pillow: M(0xf3f3f3, 0.95), cer: M(0xf6f6f4, 0.15), steel: M(0xb9bcc0, 0.28, 1),
+  black: M(0x0e0e10, 0.1), granite: M(0x25262a, 0.25), cab: M(0xeee6d8, 0.4), rugw: M(0xf1eee8, 1.0),
+  green: M(0x2f4a28, 0.95), mirror: M(0xdfe6ea, 0.03, 1), louver: M(0xb9b6b8, 0.45, 0.5), plastic: M(0xececea, 0.4),
 };
 const woodTex = mk(256, 256, (g, w, h) => {
   g.fillStyle = "#cf8a38"; g.fillRect(0, 0, w, h);
@@ -454,7 +456,7 @@ const divSt1 = divStart();
   const PEG = new THREE.MeshStandardMaterial({ map: pegTex, alphaTest: 0.5, side: THREE.DoubleSide, roughness: 0.6 });
   box(PX0, DIV_Y - 1.5, PX1 - PX0, 3, zb, zt, PEG, world, false);
   // small shelves hung on the pegboard
-  const POT = M(0xb5623f, 0.7), SOIL = M(0x2b1d14, 1.0), L1 = M(0x2f6b2a, 0.8), L2 = M(0x4a9444, 0.8), GRN = M(0x3b7a35, 0.8);
+  const POT = M(0x9c6232, 0.7), SOIL = M(0x2b1d14, 1.0), L1 = M(0x37502d, 0.8), L2 = M(0x4f6b3f, 0.8), GRN = M(0x435a38, 0.8);
   const shelf = (x, len, z, south, dep = 7) => {
     const y = south ? DIV_Y + 1.5 : DIV_Y - 1.5 - dep;
     box(x, y, len, dep, z - 0.025, z, WOOD);
@@ -557,7 +559,7 @@ const bedCollider = [BX0 * S, BY0 * S, BX1 * S, BY1 * S, false]; colliders.push(
 const coffeeGroup = new THREE.Group(); world.add(coffeeGroup);
 const cfStatic = new THREE.Group(); coffeeGroup.add(cfStatic);
 const CF_X = 85, CF_Y = TV_Y - 35, CF_W = 26, CF_L = 70, CF_Z = Z0 + 0.42;
-const SLOT = M(0x2a1a10, 0.9), CUSH = M(0x8f8a6c, 0.95);
+const SLOT = M(0x2a1a10, 0.9), CUSH = M(0x435a38, 0.95);
 cur = cfStatic;
 box(CF_X, CF_Y, CF_W, CF_L, CF_Z, CF_Z + 0.045, TWOOD);
 box(CF_X + 1.5, CF_Y + 1.5, CF_W - 3, CF_L - 3, CF_Z - 0.03, CF_Z, TWOOD);
@@ -628,7 +630,7 @@ const bigPlantGroup = new THREE.Group(); world.add(bigPlantGroup); bigPlantGroup
 let bigPlantCol;
 {
   const st = divStart(), bx = 222, by = 84;
-  const POTB = M(0x6f7478, 0.45), SOILB = M(0x2b1d14, 1.0), STEMB = M(0x6b4a2e, 0.8), LD = M(0x2f6b2a, 0.8), LL = M(0x4a9444, 0.8);
+  const POTB = M(0x6f7478, 0.45), SOILB = M(0x2b1d14, 1.0), STEMB = M(0x6b4a2e, 0.8), LD = M(0x37502d, 0.8), LL = M(0x4f6b3f, 0.8);
   cyl(bx, by, 8.5, Z0, Z0 + 0.50, POTB); cyl(bx, by, 9.2, Z0 + 0.50, Z0 + 0.54, POTB); cyl(bx, by, 7.6, Z0 + 0.54, Z0 + 0.55, SOILB);
   cyl(bx, by, 1.1, Z0 + 0.55, Z0 + 1.30, STEMB); cyl(bx - 3, by + 2, 0.7, Z0 + 0.55, Z0 + 1.15, STEMB); cyl(bx + 3, by - 2, 0.7, Z0 + 0.55, Z0 + 1.45, STEMB);
   ellip(bx, by, 14, 14, 0.95, 0.30, LD); ellip(bx - 5, by + 3, 12, 12, 1.25, 0.28, LL); ellip(bx + 5, by - 3, 12, 12, 1.50, 0.26, LD);
@@ -639,8 +641,8 @@ let bigPlantCol;
 // floor plants at the west end of the divider
 const divSt2 = divStart();
 {
-  const POT = M(0xb5623f, 0.7), SOIL = M(0x2b1d14, 1.0), STEM = M(0x6b4a2e, 0.8);
-  const LEAF_D = M(0x2f6b2a, 0.8), LEAF_L = M(0x4a9444, 0.8);
+  const POT = M(0x9c6232, 0.7), SOIL = M(0x2b1d14, 1.0), STEM = M(0x6b4a2e, 0.8);
+  const LEAF_D = M(0x37502d, 0.8), LEAF_L = M(0x4f6b3f, 0.8);
   const tx = 80, ty = 134;                                   // tall floor plant
   cyl(tx, ty, 6, Z0, Z0 + 0.38, POT); cyl(tx, ty, 5.2, Z0 + 0.38, Z0 + 0.40, SOIL);
   cyl(tx, ty, 0.9, Z0 + 0.40, Z0 + 1.15, STEM);
@@ -664,7 +666,7 @@ const tb = (cx, cy, cz, w, h, d, mat, parent = tableGroup) => {
 tb(TX, TOP - 0.009, TZ, 0.74, 0.018, 0.31, TWOOD);                                   // centre top (31 cm)
 [-1, 1].forEach(k => tb(TX + k * 0.31, FL + 0.065 + 0.3385, TZ, 0.018, 0.677, 0.30, TWOOD));   // end panels
 tb(TX, FL + 0.10, TZ, 0.62, 0.018, 0.30, TWOOD); tb(TX, FL + 0.42, TZ, 0.62, 0.018, 0.30, TWOOD);  // shelves
-tb(TX, FL + 0.40, TZ - 0.145, 0.62, 0.62, 0.012, M(0xc77f2f, 0.6));                  // back panel
+tb(TX, FL + 0.40, TZ - 0.145, 0.62, 0.62, 0.012, M(0xb08158, 0.6));                  // back panel
 [0.13, 0.45].forEach(y => [-0.05, 0.05].forEach(dz => tb(TX, FL + y, TZ + dz, 0.55, 0.008, 0.008, C.steel)));  // steel rails
 [[-1, -1], [1, -1], [-1, 1], [1, 1]].forEach(([kx, kz]) => {
   const w = new THREE.Mesh(new THREE.CylinderGeometry(0.03, 0.03, 0.025, 20), C.black);
@@ -927,7 +929,7 @@ box(526, 504, 12, 12, 1.58, 2.15, C.steel);
   // a few things on the shelves
   cyl(ox + 4, oy + 4, 2.2, 0.93, 1.12, M(0xd8d2c4, 0.5)); cyl(ox + 4, oy + 9.5, 1.8, 0.93, 1.06, M(0x7aa58a, 0.5));
   box(ox + 6, oy + 2, 6, 9, 1.335, 1.40, C.walnut); box(ox + 7, oy + 3, 4, 7, 1.40, 1.46, M(0xc9b79c, 0.8));
-  cyl(ox + 6, oy + 6, 2.6, 1.735, 1.80, M(0xb9644a, 0.7)); cyl(ox + 6, oy + 6, 1.8, 1.80, 1.95, M(0x5f8f4e, 0.8));}
+  cyl(ox + 6, oy + 6, 2.6, 1.735, 1.80, M(0x9c6232, 0.7)); cyl(ox + 6, oy + 6, 1.8, 1.80, 1.95, M(0x5f8f4e, 0.8));}
 // base cabinet doors + handles on the fronts that face into the kitchen (wood fronts, dark gaps, steel pulls)
 function baseDoors(x, y, w, h, face) {   // face "W": front on the west edge (x); "E": front on the east edge (x + w)
   const len = h, n = Math.max(1, Math.round(len / 22)), dl = len / n, fx = face === "W" ? x - 0.5 : x + w;
@@ -1030,7 +1032,7 @@ cyl(287, 61, 12, 0.5, 1.02, C.black); cyl(370, 639, 12, 0.5, 1.02, C.black);
 
 const roomLights = [];
 // ---------------------------------------------------------------- ceiling + room lights (shown with the Ceiling button)
-[[38,26,449,381],[487,26,60,208],[38,407,336,207],[365,407,182,207]].forEach(r => box(...r.slice(0, 4), WALL_H, WALL_H + 0.12, M(0xfbfaf7, 0.95), ceilingGroup));
+[[38,26,449,381],[487,26,60,208],[38,407,336,207],[365,407,182,207]].forEach(r => box(...r.slice(0, 4), WALL_H, WALL_H + 0.12, M(0xe8e0d2, 0.95), ceilingGroup));
 [[140,150],[140,320],[350,320],[440,130],[150,510],[450,470],[288,160],[322,530],[480,575]].forEach(([x, y]) => {
   const l = new THREE.PointLight(0xffe2c4, 0, 9, 1.2); l.position.set(x * S, WALL_H - 0.3, y * S); scene.add(l); roomLights.push(l);
   box(x - 14, y - 14, 28, 28, WALL_H - 0.03, WALL_H, M(0xfff6e0, 0.3), ceilingGroup, false);
@@ -1306,15 +1308,16 @@ const TIMES = {
   night:     { dir: [0.45, 0.8, -0.3],   sun: 0x8da4ff, si: 0.2,  sky: 0x0b1230, hs: 0x2a3566, hg: 0x14141c, hi: 0.3,  room: 0.9,  exp: 1.0 },
 };
 const SUN_DIST = 26;
+const LIGHT_SCALE = 0.7;   // overall exposure: lower = softer, less washed-out light
 const tod = { name: "afternoon", dir: new THREE.Vector3(), sun: new THREE.Color(), si: 0, sky: new THREE.Color(), hs: new THREE.Color(), hg: new THREE.Color(), hi: 0, room: 0 };
 function todTarget(n) { const t = TIMES[n]; return { dir: new THREE.Vector3(...t.dir).normalize(), sun: new THREE.Color(t.sun), si: t.si, sky: new THREE.Color(t.sky), hs: new THREE.Color(t.hs), hg: new THREE.Color(t.hg), hi: t.hi, room: t.room }; }
 let todTo = todTarget("afternoon");
 function applyRoomLights() { const v = Math.max(tod.room, ceilOn ? 0.55 : 0); roomLights.forEach(l => l.intensity = v); }
 function applyTod() {
   sun.position.copy(sun.target.position).addScaledVector(tod.dir, SUN_DIST);
-  sun.color.copy(tod.sun); sun.intensity = tod.si;
+  sun.color.copy(tod.sun); sun.intensity = tod.si * LIGHT_SCALE;
   scene.background.copy(tod.sky);
-  hemi.color.copy(tod.hs); hemi.groundColor.copy(tod.hg); hemi.intensity = tod.hi;
+  hemi.color.copy(tod.hs); hemi.groundColor.copy(tod.hg); hemi.intensity = tod.hi * LIGHT_SCALE;
   nbMats.forEach(m => m.emissiveIntensity = Math.min(1, tod.room) * 0.9);
   applyRoomLights();
 }

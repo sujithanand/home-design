@@ -68,13 +68,13 @@ button:focus-visible, select:focus-visible { outline: 2px solid var(--accent); o
     <h3>Room layout</h3>
     <h4>Living room</h4>
     <div class="row icons seg" id="bLayout" role="group" aria-label="Living room layout">
-      <button data-v="1" aria-pressed="true" title="Layout 1: divider mid-room" aria-label="Living room layout 1"><svg viewBox="0 0 24 24"><path d="M4 4h16v16H4zM10 10h10"/></svg><span>1</span></button>
-      <button data-v="2" aria-pressed="false" title="Layout 2: divider by the entrance" aria-label="Living room layout 2"><svg viewBox="0 0 24 24"><path d="M4 4h16v16H4zM4 16h10"/></svg><span>2</span></button>
+      <button data-v="1" aria-pressed="true" title="Layout 1: divider by the entrance" aria-label="Living room layout 1"><svg viewBox="0 0 24 24"><path d="M4 4h16v16H4zM4 16h10"/></svg><span>1</span></button>
+      <button data-v="2" aria-pressed="false" title="Layout 2: divider mid-room" aria-label="Living room layout 2"><svg viewBox="0 0 24 24"><path d="M4 4h16v16H4zM10 10h10"/></svg><span>2</span></button>
     </div>
     <h4>Small bedroom</h4>
     <div class="row icons seg" id="bLayoutBr" role="group" aria-label="Small bedroom layout">
-      <button data-v="1" aria-pressed="true" title="Layout 1: queen bed" aria-label="Small bedroom layout 1"><svg viewBox="0 0 24 24"><path d="M3 19v-8h18v8M3 15h18M6 11V8h5v3"/></svg><span>1</span></button>
-      <button data-v="2" aria-pressed="false" title="Layout 2: sofa bed" aria-label="Small bedroom layout 2"><svg viewBox="0 0 24 24"><path d="M5 11V8a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v3M3 12a2 2 0 0 1 4 0v3h10v-3a2 2 0 0 1 4 0v5H3z"/></svg><span>2</span></button>
+      <button data-v="1" aria-pressed="true" title="Layout 1: sofa bed" aria-label="Small bedroom layout 1"><svg viewBox="0 0 24 24"><path d="M5 11V8a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v3M3 12a2 2 0 0 1 4 0v3h10v-3a2 2 0 0 1 4 0v5H3z"/></svg><span>1</span></button>
+      <button data-v="2" aria-pressed="false" title="Layout 2: queen bed" aria-label="Small bedroom layout 2"><svg viewBox="0 0 24 24"><path d="M3 19v-8h18v8M3 15h18M6 11V8h5v3"/></svg><span>2</span></button>
     </div>
   </div>
   <div class="grp">
@@ -87,7 +87,7 @@ button:focus-visible, select:focus-visible { outline: 2px solid var(--accent); o
     <h4>Sofa bed</h4>
     <div class="row icons">
       <button id="bBed" aria-pressed="false" title="Pull out the living-room sofa bed" aria-label="Living room sofa bed pulled out"><svg viewBox="0 0 24 24"><path d="M3 19v-8h18v8M3 15h18M6 11V8h5v3"/></svg></button>
-      <button id="bBed2" aria-pressed="true" disabled title="Pull out the bedroom sofa bed (small bedroom Layout 2)" aria-label="Bedroom sofa bed pulled out"><svg viewBox="0 0 24 24"><path d="M3 19v-8h18v8M3 15h18M6 11V8h5v3"/><path d="M19 3v4M17 5h4"/></svg></button>
+      <button id="bBed2" aria-pressed="true" disabled title="Pull out the bedroom sofa bed (small bedroom Layout 1)" aria-label="Bedroom sofa bed pulled out"><svg viewBox="0 0 24 24"><path d="M3 19v-8h18v8M3 15h18M6 11V8h5v3"/><path d="M19 3v4M17 5h4"/></svg></button>
     </div>
     <h4>Coffee table</h4>
     <div class="row icons">
@@ -1111,16 +1111,16 @@ function setLayout(two) {
   loungeCols.forEach(({ c, o }) => { c[1] = o[1] + LZ; c[3] = o[3] + LZ; });
   cabNGroup.visible = !two; cabL2Group.visible = two;
   cabE.scale.x = two ? -1 : 1; cabE.position.x = two ? DIV_MX * S : 0;
-  bLayout.value = two ? "2" : "1";
-  say(two ? "Layout 2: divider beside the entrance, parallel to the open main door; study moved against the master-bedroom wall" : "Layout 1: divider mid-room");
+  bLayout.value = two ? "1" : "2";
+  say(two ? "Layout 1: divider beside the entrance, parallel to the open main door; study moved against the master-bedroom wall" : "Layout 2: divider mid-room");
 }
-bindSeg(bLayout, v => setLayout(v === "2"));
+bindSeg(bLayout, v => setLayout(v === "1"));
 const bLayoutBr = document.getElementById("bLayoutBr"), bBed2 = document.getElementById("bBed2");
 function setBedroomLayout(two) {
-  brTwo = two; bLayoutBr.value = two ? "2" : "1"; bBed2.disabled = !two; applyBedroom();
-  say(two ? "Small bedroom, Layout 2: the bed is now a sofa bed" : "Small bedroom, Layout 1: queen bed");
+  brTwo = two; bLayoutBr.value = two ? "1" : "2"; bBed2.disabled = !two; applyBedroom();
+  say(two ? "Small bedroom, Layout 1: the bed is now a sofa bed" : "Small bedroom, Layout 2: queen bed");
 }
-bindSeg(bLayoutBr, v => setBedroomLayout(v === "2"));
+bindSeg(bLayoutBr, v => setBedroomLayout(v === "1"));
 function setBedroomBed(open) { brOpen = open; bBed2.setAttribute("aria-pressed", String(open)); applyBedroom(); say(open ? "Bedroom sofa bed pulled out: 103 × 121" : "Bedroom sofa bed closed"); }
 bBed2.onclick = () => setBedroomBed(!brOpen);
 // settings
@@ -1130,7 +1130,7 @@ sShadows.onclick = () => {
   const on = sShadows.getAttribute("aria-pressed") !== "true"; sShadows.setAttribute("aria-pressed", String(on));
   sun.castShadow = on; renderer.shadowMap.enabled = on; scene.traverse(o => { if (o.material) [].concat(o.material).forEach(m => m.needsUpdate = true); });
 };
-document.getElementById("sReset").onclick = () => { setLayout(false); setBedroomLayout(false); say("Layouts reset to Layout 1"); };
+document.getElementById("sReset").onclick = () => { setLayout(true); setBedroomLayout(true); say("Layouts reset to Layout 1"); };
 const bTable = document.getElementById("bTable");
 function setTable(open) {
   tableOpen = open; tOpenCol[4] = open; tClosedCol[4] = !open; if (!open && fourMode) setFour(false, true);
@@ -1250,7 +1250,7 @@ renderer.setAnimationLoop(() => {
   renderer.render(scene, camera);
 });
 // ---------------------------------------------------------------- neighbouring homes (west, across from the entrance)
-// they block the low evening sun, so it never enters directly; the room only gets soft sky glow
+// a small house across from the entrance
 const nbMats = [];
 (function neighbours() {
   const mk = () => { const c = document.createElement("canvas"); c.width = c.height = 256; return c; };
@@ -1262,18 +1262,24 @@ const nbMats = [];
     gw.fillStyle = "#5f7689"; gw.fillRect(x, y, 20, 17);
     if (rnd() < 0.55) { gl.fillStyle = "#ffcf7a"; gl.fillRect(x, y, 20, 17); }
   }
-  const tex = c => { const t = new THREE.CanvasTexture(c); t.encoding = THREE.sRGBEncoding; t.wrapS = t.wrapT = THREE.RepeatWrapping; t.repeat.set(3, 4); return t; };
-  const walls = new THREE.MeshStandardMaterial({ color: 0xcdbfae, roughness: 0.95 });
+  const tex = c => { const t = new THREE.CanvasTexture(c); t.encoding = THREE.sRGBEncoding; t.wrapS = t.wrapT = THREE.RepeatWrapping; t.repeat.set(1, 1); return t; };
+  const walls = new THREE.MeshStandardMaterial({ color: 0xe6d8c3, roughness: 0.95 });
+  const roofM = new THREE.MeshStandardMaterial({ color: 0x9a4b3c, roughness: 0.85 });
   const facade = new THREE.MeshStandardMaterial({ map: tex(wall), roughness: 0.9, emissive: 0xffffff, emissiveMap: tex(lit), emissiveIntensity: 0 });
   nbMats.push(facade);
-  // two blocks facing the entrance (west); tall enough to hide the low evening sun
-  [[-15.5, -8, 6, 24, 16], [-15.5, 19, 6, 12, 14]].forEach(([x, z, w, d, h]) => {
-    const f = new THREE.Mesh(new THREE.BoxGeometry(w, h, d), [facade, walls, walls, walls, walls, walls]);
-    f.position.set(x + w / 2, h / 2 - 1, z + d / 2);
-    f.castShadow = f.receiveShadow = true;
-    scene.add(f);
-  });
+  // one small house facing the entrance (west): box body + pitched roof
+  const w = 6, d = 7, h = 4, x = -15.5, z = 1;
+  const body = new THREE.Mesh(new THREE.BoxGeometry(w, h, d), [facade, walls, walls, walls, walls, walls]);
+  body.position.set(x + w / 2, h / 2 - 1, z + d / 2);
+  const roof = new THREE.Mesh(new THREE.ConeGeometry((w / 2 + 0.4) * Math.SQRT2, 2.4, 4), roofM);
+  roof.rotation.y = Math.PI / 4;   // square pyramid roof, overhanging 0.4
+  roof.scale.z = (d + 0.8) / (w + 0.8);
+  roof.position.set(x + w / 2, h - 1 + 1.2, z + d / 2);
+  [body, roof].forEach(m => { m.castShadow = m.receiveShadow = true; scene.add(m); });
 })();
+
+// default to the primary layouts (UI Layout 1)
+setLayout(true); setBedroomLayout(true); toast.style.opacity = 0;
 
 // ---------------------------------------------------------------- time of day
 // plan axes: +x = east (balcony), -x = west (entrance), -z = north, +z = south
